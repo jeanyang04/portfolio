@@ -1,8 +1,8 @@
 // src/components/contact-form.tsx
 "use client";
 
-import { useEffect } from 'react';
-import { useFormState, useFormStatus } from 'react-dom';
+import { useEffect, useActionState } from 'react'; // Changed useFormState to useActionState
+import { useFormStatus } from 'react-dom'; // useFormStatus remains from react-dom
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -35,7 +35,7 @@ function SubmitButton() {
 }
 
 export function ContactForm() {
-  const [state, formAction] = useFormState(submitContactForm, initialState);
+  const [state, formAction] = useActionState(submitContactForm, initialState); // Changed to useActionState
   
   // This is a common pattern if you want to clear the form on success,
   // but react-hook-form handles this better. For basic useFormState, this is manual.
@@ -55,7 +55,7 @@ export function ContactForm() {
               {state.success ? <CheckCircle className="h-4 w-4" /> : <AlertCircle className="h-4 w-4" />}
               <AlertTitle>{state.success ? "Success!" : "Error!"}</AlertTitle>
               <AlertDescription>{state.message}</AlertDescription>
-              {state.issues && (
+              {state.issues && state.issues.length > 0 && (
                 <ul className="mt-2 list-disc list-inside text-xs">
                   {state.issues.map((issue, index) => (
                     <li key={index}>{issue}</li>

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { GeistSans } from 'geist/font/sans';
-import { GeistMono } from 'geist/font/mono';
+// import { GeistMono } from 'geist/font/mono'; // Removed as it's not directly used and font-family is set in globals.css
 import './globals.css'; // Ensure globals.css is imported before layout components
 import { AppLayout } from '@/components/layout/app-layout';
 import { SITE_TITLE, SITE_DESCRIPTION } from '@/lib/config';
@@ -20,7 +20,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>
+    <html lang="en" className={`${GeistSans.variable}`}>
       <body>
         <AppLayout>{children}</AppLayout>
       </body>
