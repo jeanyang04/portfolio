@@ -1,5 +1,5 @@
 import type { LucideIcon } from 'lucide-react';
-import { User, Lightbulb, Briefcase, AppWindow, Mail } from 'lucide-react';
+import { User, Briefcase, AppWindow, Mail } from 'lucide-react'; // Removed Lightbulb
 
 export type NavItem = {
   href: string;
@@ -9,8 +9,7 @@ export type NavItem = {
 };
 
 export const NAV_ITEMS: NavItem[] = [
-  { href: '/', label: 'About', icon: User, matchSegments: [''] }, // Assuming '/' is About and no dedicated '/about' segment
-  { href: '/skills', label: 'Skills', icon: Lightbulb },
+  { href: '/', label: 'About & Skills', icon: User, matchSegments: [''] }, // Renamed label, Skills page merged here
   { href: '/experience', label: 'Experience', icon: Briefcase },
   { href: '/projects', label: 'Projects', icon: AppWindow },
   { href: '/contact', label: 'Contact', icon: Mail },
