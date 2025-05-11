@@ -14,7 +14,7 @@ import {
   SidebarSeparator,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
-import { NAV_ITEMS, SITE_TITLE, SOCIAL_LINKS, RESUME_PATH } from "@/lib/config";
+import { NAV_ITEMS, SOCIAL_LINKS, RESUME_PATH } from "@/lib/config";
 import { cn } from "@/lib/utils";
 import { Github, Linkedin, FileText, PanelLeft } from "lucide-react";
 import { useSidebar } from "@/components/ui/sidebar";
@@ -27,7 +27,7 @@ const Logo = () => (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     className="text-primary shrink-0"
-    aria-label="AI Portfolio Pro Logo"
+    aria-label="Site Logo"
   >
     <path
       d="M12 2L2 7L12 12L22 7L12 2Z"
@@ -134,12 +134,7 @@ export function MainSidebar() {
       <SidebarHeader className="p-4 flex items-center justify-between">
         <Link href="/#about" className="flex items-center gap-2 overflow-hidden" onClick={() => { if(isMobile) toggleSidebar();}}>
           <Logo />
-          <span className={cn(
-            "font-semibold text-lg text-foreground whitespace-nowrap transition-opacity duration-300",
-            isSidebarCollapsed ? "opacity-0 w-0" : "opacity-100 w-auto"
-          )}>
-            {SITE_TITLE}
-          </span>
+          {/* SITE_TITLE removed from here */}
         </Link>
         {!isMobile && (
            <Button variant="ghost" size="icon" onClick={toggleSidebar} className={cn("text-sidebar-foreground hover:text-primary", isSidebarCollapsed && "rotate-180")}>

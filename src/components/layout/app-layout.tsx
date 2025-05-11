@@ -11,7 +11,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/toaster";
-import { SITE_TITLE } from '@/lib/config';
+// SITE_TITLE import removed as it's no longer used directly in this component's UI
 import { cn } from '@/lib/utils';
 
 // This component is used to conditionally render the mobile header.
@@ -24,8 +24,8 @@ function MobileHeader() {
   }
 
   return (
-    <header className="sticky top-0 z-40 flex h-14 items-center justify-between gap-4 border-b bg-background px-4 md:hidden">
-      <h1 className="text-lg font-semibold text-foreground">{SITE_TITLE}</h1>
+    <header className="sticky top-0 z-40 flex h-14 items-center justify-end gap-4 border-b bg-background px-4 md:hidden">
+      {/* SITE_TITLE h1 removed */}
       <SidebarTrigger />
     </header>
   );
@@ -38,7 +38,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
       // The ui/sidebar component already handles cookie saving for desktop.
     }}>
       <Sidebar
-        collapsible="icon"
+        collapsible="icon" // This enables icon-only collapse
         className={cn("border-sidebar-border bg-sidebar")} // Ensure sidebar has its own background
       >
         <MainSidebar />

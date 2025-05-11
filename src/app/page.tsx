@@ -7,7 +7,7 @@ import { PageWrapper } from '@/components/page-wrapper';
 import { RESUME_PATH, SOCIAL_LINKS } from '@/lib/config';
 import { SKILLS_DATA, EXPERIENCE_DATA, PROJECTS_DATA } from '@/lib/data';
 import { Badge } from '@/components/ui/badge';
-import { Download, Github, Linkedin, Mail, Briefcase } from 'lucide-react';
+import { Download, Github, Linkedin, Mail, Briefcase, Send } from 'lucide-react';
 import { ProjectCard } from '@/components/project-card';
 import { ContactForm } from '@/components/contact-form';
 import type { Metadata } from 'next';
@@ -27,15 +27,15 @@ export default function SinglePagePortfolio() {
             <div className="lg:col-span-2 space-y-6">
               <Card>
                 <CardContent className="pt-6">
-                  <p className="text-md leading-relaxed text-foreground/90">
+                  <p className="text-sm leading-relaxed text-foreground/90"> {/* Font size reduced */}
                     Hello! I&apos;m a passionate and results-driven professional with a strong background in AI and software development. 
                     My journey in tech has been fueled by a relentless curiosity and a desire to build innovative solutions that tackle real-world problems.
                   </p>
-                  <p className="mt-4 text-md leading-relaxed text-foreground/90">
+                  <p className="mt-3 text-sm leading-relaxed text-foreground/90"> {/* Font size reduced and margin adjusted */}
                     I specialize in creating intelligent applications, leveraging cutting-edge technologies like machine learning, natural language processing, and full-stack web development. 
                     I thrive in collaborative environments and am always eager to learn and adapt to new challenges.
                   </p>
-                  <p className="mt-4 text-md leading-relaxed text-foreground/90">
+                  <p className="mt-3 text-sm leading-relaxed text-foreground/90"> {/* Font size reduced and margin adjusted */}
                     This portfolio is a showcase of my skills, projects, and experiences. Feel free to explore and get in touch!
                   </p>
                 </CardContent>
@@ -94,11 +94,18 @@ export default function SinglePagePortfolio() {
                       </Link>
                     </Button>
                   </div>
-                  <Button asChild className="mt-6 w-full bg-primary text-primary-foreground hover:bg-primary/90">
-                    <Link href={RESUME_PATH} target="_blank" download="resume.pdf">
-                      <Download className="mr-2 h-4 w-4" /> Download Resume
-                    </Link>
-                  </Button>
+                  <div className="mt-6 space-y-2">
+                    <Button asChild className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
+                      <Link href={RESUME_PATH} target="_blank" download="resume.pdf">
+                        <Download className="mr-2 h-4 w-4" /> Download Resume
+                      </Link>
+                    </Button>
+                    <Button asChild className="w-full" variant="outline">
+                      <Link href="/#contact">
+                        <Mail className="mr-2 h-4 w-4" /> Contact Me
+                      </Link>
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
               
