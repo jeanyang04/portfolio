@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     default: SITE_TITLE,
     template: `%s | ${SITE_TITLE}`,
   },
-  description: SITE_DESCRIPTION,
+  description: SITE_DESCRIPTION, // Updated via lib/config.ts
   // Add more metadata as needed: openGraph, icons, etc.
 };
 
@@ -20,7 +20,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${GeistSans.variable}`}>
+    <html lang="en" className={`${GeistSans.variable}`} style={{scrollBehavior: 'smooth'}}>
       <body>
         <AppLayout>{children}</AppLayout>
       </body>

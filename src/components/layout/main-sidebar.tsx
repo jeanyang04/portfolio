@@ -2,7 +2,8 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname } from "next/navigation"; // Keep for potential future use, but not primary for hash logic
+import React, { useEffect, useState, useRef } from "react";
 import {
   SidebarHeader,
   SidebarContent,
@@ -54,19 +55,76 @@ const Logo = () => (
 
 
 export function MainSidebar() {
-  const pathname = usePathname();
   const { state: sidebarState, isMobile, toggleSidebar } = useSidebar();
+  const [activeSection, setActiveSection] = useState<string>(NAV_ITEMS[0]?.href.substring(2) || 'about');
+  const observerRef = useRef<IntersectionObserver | null>(null);
+  const sectionRefs = useRef<Map<string, HTMLElement | null>>(new Map());
 
-  const isActive = (href: string, matchSegments?: string[]) => {
-    if (href === '/') {
-      // Special handling for the root path to avoid matching all sub-paths
-      return pathname === '/';
+
+  useEffect(() => {
+    // Function to initialize or update refs for all navigable sections
+    const updateSectionRefs = () => {
+      NAV_ITEMS.forEach(item => {
+        const sectionId = item.href.substring(2); // Assumes href is '/#sectionId'
+        sectionRefs.current.set(sectionId, document.getElementById(sectionId));
+      });
+    };
+    updateSectionRefs(); // Call on mount and potentially if NAV_ITEMS could change
+
+    // Ensure IntersectionObserver is created only once
+    if (!observerRef.current) {
+      observerRef.current = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              // Prioritize entry that is more visible or higher on the page
+              // A more sophisticated logic might be needed if sections overlap visibility significantly
+               if (entry.intersectionRatio > 0.1) { // Check if at least 10% of the section is visible
+                 const newActiveSection = entry.target.id;
+                 setActiveSection(newActiveSection);
+                 // Optionally update URL hash without adding to history (for scroll-driven changes)
+                 // history.replaceState(null, '', `#${newActiveSection}`); 
+               }
+            }
+          });
+        },
+        {
+          rootMargin: "-20% 0px -60% 0px", // Adjust based on where you want the highlight to trigger
+          threshold: 0.1, // Trigger when 10% of the element is visible
+        }
+      );
     }
-    if (matchSegments) {
-      const currentSegment = pathname.split('/')[1] || '';
-      return matchSegments.includes(currentSegment);
-    }
-    return pathname === href || pathname.startsWith(`${href}/`);
+    const currentObserver = observerRef.current;
+
+    // Observe sections
+    sectionRefs.current.forEach(el => {
+      if (el) currentObserver.observe(el);
+    });
+    
+    // Handle hash changes from link clicks or manual URL input
+    const handleHashChange = () => {
+      const hash = window.location.hash.substring(1);
+      if (hash && sectionRefs.current.has(hash)) {
+        setActiveSection(hash);
+      } else if (!hash && NAV_ITEMS.length > 0) {
+         // Default to the first item if hash is empty or invalid
+        setActiveSection(NAV_ITEMS[0].href.substring(2));
+      }
+    };
+
+    window.addEventListener("hashchange", handleHashChange, false);
+    handleHashChange(); // Initial check
+
+    return () => {
+      currentObserver.disconnect();
+      window.removeEventListener("hashchange", handleHashChange, false);
+      observerRef.current = null; // Clean up observer instance on unmount
+    };
+  }, []); // NAV_ITEMS are static, so empty dependency array is fine.
+
+  const isActive = (href: string) => {
+    const sectionName = href.substring(2); // href is like '/#about'
+    return activeSection === sectionName;
   };
 
   const isSidebarCollapsed = sidebarState === "collapsed" && !isMobile;
@@ -74,7 +132,7 @@ export function MainSidebar() {
   return (
     <>
       <SidebarHeader className="p-4 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 overflow-hidden">
+        <Link href="/#about" className="flex items-center gap-2 overflow-hidden" onClick={() => { if(isMobile) toggleSidebar();}}>
           <Logo />
           <span className={cn(
             "font-semibold text-lg text-foreground whitespace-nowrap transition-opacity duration-300",
@@ -83,7 +141,7 @@ export function MainSidebar() {
             {SITE_TITLE}
           </span>
         </Link>
-        {!isMobile && ( // Show desktop toggle only
+        {!isMobile && (
            <Button variant="ghost" size="icon" onClick={toggleSidebar} className={cn("text-sidebar-foreground hover:text-primary", isSidebarCollapsed && "rotate-180")}>
              <PanelLeft />
            </Button>
@@ -96,9 +154,15 @@ export function MainSidebar() {
               <Link href={item.href} legacyBehavior passHref>
                 <SidebarMenuButton
                   asChild
-                  isActive={isActive(item.href, item.matchSegments)}
+                  isActive={isActive(item.href)}
                   tooltip={{ children: item.label, className: "bg-popover text-popover-foreground border-border" }}
                   className="text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground data-[active=true]:bg-sidebar-primary data-[active=true]:text-sidebar-primary-foreground"
+                  onClick={() => {
+                    if(isMobile) toggleSidebar();
+                    // Manually set active section on click for immediate feedback, IntersectionObserver will confirm
+                    const sectionId = item.href.substring(2);
+                    setActiveSection(sectionId);
+                  }}
                 >
                   <a>
                     <item.icon className="shrink-0" />
